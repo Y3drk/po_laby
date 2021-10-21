@@ -8,13 +8,13 @@ public class World {
     public static void main(String[] args) {
         System.out.println("system wystartował");
 
-        String mvs;
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Podaj ruchy zwierzaka: ");
-        mvs = sc.nextLine();
-        String[] mvsArray = mvs.split(" ");
+        //String mvs;
+        //Scanner sc = new Scanner(System.in);
+        //System.out.print("Podaj ruchy zwierzaka: ");
+        //mvs = sc.nextLine();
+        //String[] mvsArray = mvs.split(" ");
 
-        Direction[] mvs2 = change(mvsArray);
+        Direction[] mvs2 = change(args);
 
         run(mvs2);
 
