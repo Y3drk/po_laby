@@ -1,9 +1,8 @@
 package agh.ics.oop;
 
 
-import static agh.ics.oop.MoveDirection.FORWARD;
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import java.util.ArrayList;
+
 
 public class World {
     public static void main(String[] args) {
@@ -15,12 +14,13 @@ public class World {
         //mvs = sc.nextLine();
         //String[] mvsArray = mvs.split(" ");
 
+        //laby 1
         //Direction[] mvs2 = change(args);
 
         //run(mvs2);
 
         // laby 2
-        Vector2d position1 = new Vector2d(1,2);
+        /*Vector2d position1 = new Vector2d(1,2);
         System.out.println(position1);
         Vector2d position2 = new Vector2d(-2,1);
         System.out.println(position2);
@@ -41,13 +41,33 @@ public class World {
         System.out.println(n.toString());
         System.out.println(s.next());
         System.out.println(e.previous());
-        System.out.println(w.toUnitVector());
+        System.out.println(w.toUnitVector());*/
 
+        //laby3
+        /*punkt 5
+        Animal animal = new Animal();
+        animal.move(RIGHT);
+        animal.move(FORWARD);
+        animal.move(FORWARD);
+        animal.move(FORWARD);
+        animal.move(FORWARD);
+        System.out.println(animal);
+        System.out.println(animal.isAt(new Vector2d(4,2)));*/
+
+        //punkt 7
+        Animal animal = new Animal();
+        ArrayList<MoveDirection> mvs = OptionParser.parser(args);
+        System.out.println(mvs);
+        for (MoveDirection dir : mvs) {
+                animal.move(dir);
+        }
+        System.out.println(animal);
 
         System.out.println("system zakończył działanie");
 
     }
 
+    //laby1
     public static Direction[] change(String[] arr) {
         Direction[] mvs2 = new Direction[arr.length];
         int i = 0;
@@ -80,69 +100,4 @@ public class World {
         }
         System.out.println("STOP");
     }
-
-    //laby2
-
-    public static class Vector2d {
-        final int x;
-        final int y;
-
-        public Vector2d(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public String toString() {
-            return "(" + this.x + "," + this.y + ")";
-        }
-
-        public boolean precedes(Vector2d other) {
-            return this.x <= other.x && this.y <= other.y;
-        }
-
-        public boolean follows(Vector2d other) {
-            return this.x >= other.x && this.y >= other.y;
-        }
-
-        public Vector2d upperRight(Vector2d other) {
-            int xn = max(this.x, other.x);
-            int yn = max(this.y, other.y);
-            return new Vector2d(xn, yn);
-        }
-
-        public Vector2d lowerLeft(Vector2d other) {
-            int xn = min(this.x, other.x);
-            int yn = min(this.y, other.y);
-            return new Vector2d(xn, yn);
-        }
-
-        public Vector2d add(Vector2d other) {
-            return new Vector2d((this.x + other.x), (this.y + other.y));
-        }
-
-        public Vector2d subtract(Vector2d other) {
-            return new Vector2d((this.x - other.x), (this.y - other.y));
-        }
-
-        public boolean equals(Object other) {
-            if (this == other)
-                return true;
-            if (other == null)
-                return false;
-            if (getClass() != other.getClass())
-                return false;
-            Vector2d temp = (Vector2d) other;
-            return this.x == temp.x && this.y == temp.y;
-            }
-
-
-        public Vector2d opposite(){
-            return new Vector2d(-this.x, -this.y);
-        }
-
-
-
-
-
-        }
 }

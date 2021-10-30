@@ -33,12 +33,12 @@ public enum MapDirection {
         };
     }
 
-    public World.Vector2d toUnitVector(){
+    public Vector2d toUnitVector(){
         return switch (this) {
-            case NORTH -> new World.Vector2d(0,1);
-            case SOUTH -> new World.Vector2d(0,-1);
-            case EAST -> new World.Vector2d(1,0);
-            case WEST -> new World.Vector2d(-1,0);
+            case NORTH -> new Vector2d(0,1);
+            case SOUTH -> new Vector2d(0,-1);
+            case EAST -> new Vector2d(1,0);
+            case WEST -> new Vector2d(-1,0);
         };
     }
 
