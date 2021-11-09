@@ -44,6 +44,7 @@ public class World {
         System.out.println(w.toUnitVector());*/
 
         //laby3
+
         /*punkt 5
         Animal animal = new Animal();
         animal.move(RIGHT);
@@ -52,7 +53,7 @@ public class World {
         animal.move(FORWARD);
         animal.move(FORWARD);
         System.out.println(animal);
-        System.out.println(animal.isAt(new Vector2d(4,2)));*/
+        System.out.println(animal.isAt(new Vector2d(4,2)));
 
         //punkt 7
         Animal animal = new Animal();
@@ -61,8 +62,17 @@ public class World {
         for (MoveDirection dir : mvs) {
                 animal.move(dir);
         }
-        System.out.println(animal);
+        System.out.println(animal);*/
 
+        //laby4
+        ArrayList<MoveDirection> directions = OptionParser.parser(args);
+        System.out.println(directions);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        IEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
+
+        System.out.print(map);
         System.out.println("system zakończył działanie");
 
     }
