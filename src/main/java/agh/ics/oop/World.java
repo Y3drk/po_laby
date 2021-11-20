@@ -65,7 +65,8 @@ public class World {
         System.out.println(animal);*/
 
         //laby4
-        ArrayList<MoveDirection> directions = OptionParser.parser(args);
+        /*
+        ArrayList<MoveDirection> directions = OptionParser.parser(args); //ctrlV z treści labów tylko zmiast parsowania na tablice robimy to na ArrayList
         System.out.println(directions);
         IWorldMap map = new RectangularMap(10, 5);
         Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
@@ -73,6 +74,18 @@ public class World {
         engine.run();
 
         System.out.print(map);
+        */
+
+        //laby5 //cos nie działa
+        ArrayList<MoveDirection> directions = OptionParser.parser(args);
+        System.out.println(directions);
+        IWorldMap map = new GrassField(10);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        IEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
+
+        System.out.print(map);
+
         System.out.println("system zakończył działanie");
 
     }

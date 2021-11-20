@@ -6,6 +6,7 @@ public class SimulationEngine implements IEngine{
     public ArrayList<MoveDirection> mvs;
     public IWorldMap map;
     public Vector2d[] animals_to_place;
+    private ArrayList<Animal> cubs = new ArrayList<>();
 
     public SimulationEngine(ArrayList<MoveDirection> dirs, IWorldMap map, Vector2d[] ideas){
         this.mvs = dirs;
@@ -16,20 +17,20 @@ public class SimulationEngine implements IEngine{
 
     public void addAnimals(){
         for (Vector2d lifeform: animals_to_place) {
-                map.place(new Animal(map, lifeform));
+            Animal kitty = new Animal(map, lifeform);
+            if (map.place(kitty)){
+                cubs.add(kitty);
             }
+        }
     }
 
     @Override
     public void run() {
-        RectangularMap map2 = (RectangularMap) map;
-        ArrayList<Animal> creatures = map2.getAnimalList();
         for (int i=0; i < mvs.size(); i++) {
-            Animal lifeform = creatures.get(i % creatures.size());
+            Animal lifeform = cubs.get(i % cubs.size());
             lifeform.move(this.mvs.get(i));
-            creatures.set(i % creatures.size(), lifeform);
+            cubs.set(i % cubs.size(), lifeform);
         }
-        map = map2;
         }
 }
 
