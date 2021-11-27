@@ -76,7 +76,19 @@ public class World {
         System.out.print(map);
         */
 
-        //laby5 //cos nie działa
+        //laby5
+        /*ArrayList<MoveDirection> directions = OptionParser.parser(args);
+        System.out.println(directions);
+        IWorldMap map = new GrassField(10);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        IEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
+
+        System.out.print(map);*/
+
+
+        //lab6 - test działania po zmianach na HashMap
+        // w zasadzie oczekujemy, że wydarzy się to samo
         ArrayList<MoveDirection> directions = OptionParser.parser(args);
         System.out.println(directions);
         IWorldMap map = new GrassField(10);

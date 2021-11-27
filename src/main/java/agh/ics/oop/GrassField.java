@@ -1,50 +1,67 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Math.sqrt;
 
-public class GrassField extends AbstractWorldMap implements IWorldMap {
+public class GrassField extends AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     private final int n; //ilosc kępek trawy
-    private ArrayList<Animal> animals = new ArrayList<>();
-    private ArrayList<Grass> grass = new ArrayList<>();
+    //private ArrayList<Animal> animals = new ArrayList<>(); //do zmiany na hash Mapę w lab6
+    //private ArrayList<Grass> grass = new ArrayList<>(); //do zmiany na hash Mapę w lab6
 
+    private Map<Vector2d, Animal> animals = new LinkedHashMap<>();
+    private Map<Vector2d, Grass> grass = new LinkedHashMap<>();
 
     public GrassField(int amountOfGrass) {
         this.n = amountOfGrass;
         placeTuftsOfGrass();
     }
 
-    public void placeTuftsOfGrass() {
+    public void placeTuftsOfGrass() { //trzeba będzie zmienic .add na .put przez syntaktyke HashMapy
         Random generator = new Random();
         int i = 0;
         while (i < this.n) {
             Vector2d pos = new Vector2d(generator.nextInt((int) sqrt(10 * n)), generator.nextInt((int) sqrt(10 * n)));
             if (!isOccupied(pos)) {
-                grass.add(new Grass(pos));
+                grass.put(pos,new Grass(pos));  //grass.add(new Grass(pos));
                 i++;
             }
         }
     }
 
     public String toString(){
-        animals.addAll(super.animals);
+        animals.putAll(super.animals);  //zastanowić się jak to uaktualnić do HashMapy -> istnieje metoda .putAll()
 
         return super.toString();
     }
 
-    public Vector2d[] getCorners(){
+    public Vector2d[] getCorners(){ //psuje sie przez forEach ...???
         Vector2d topRight = new Vector2d (0,0);
         Vector2d bottomLeft = new Vector2d (0,0);
-        for (Animal lifeform: animals){
+
+        Set<Map.Entry<Vector2d, Animal>> entrySetAnimals = animals.entrySet();
+        Set<Map.Entry<Vector2d, Grass>> entrySetGrass = grass.entrySet();
+
+        Iterator<Map.Entry<Vector2d, Animal>> itAnimals = entrySetAnimals.iterator();
+        Iterator<Map.Entry<Vector2d, Grass>> itGrass = entrySetGrass.iterator();
+
+        while (itAnimals.hasNext()){
+            var pos = itAnimals.next().getKey();
+            topRight = topRight.upperRight(pos);
+
+            bottomLeft = bottomLeft.lowerLeft(pos);
+        }
+
+        while(itGrass.hasNext()){
+            var pos = itGrass.next().getKey();
+            topRight = topRight.upperRight(pos);
+
+            bottomLeft = bottomLeft.lowerLeft(pos);
+        }
+
+        /*for (Animal lifeform: animals){
             Vector2d pos = lifeform.getPosition();
-            for (Grass tuft: grass){ //sprawdzenie czy jakieś zwierzę i jakaś trawka nie są na jednym polu, jesli tak to narazie usuwamy trawke, zeby zapewnic zwierzęciu prio
-                Vector2d chk = tuft.getPosition();
-                if (chk.x == pos.x && chk.y == pos.y) {
-                    grass.remove(tuft);
-                }
-            }
+
             if (pos.x > topRight.x){
                 topRight= new Vector2d(pos.x, topRight.y);
             }
@@ -67,10 +84,9 @@ public class GrassField extends AbstractWorldMap implements IWorldMap {
             if (pos.y > topRight.y){
                 topRight= new Vector2d(topRight.x, pos.y);
             }
-        }
-        Vector2d[] corners = {bottomLeft, topRight};
+        }*/
 
-        return corners;
+        return new Vector2d[]{bottomLeft, topRight};
     }
 
     @Override
@@ -79,53 +95,28 @@ public class GrassField extends AbstractWorldMap implements IWorldMap {
         return (something == null) || (something instanceof Grass);
     }
 
-    /*@Override
-    public boolean place(Animal animal) {  // zakładam, że animal może zrespić się na trawce
-        Vector2d pos = animal.getPosition();
-        Object something = objectAt(pos);
-        if (something instanceof Animal) {
-            return false;
-        } else {
-            animals.add(animal);
-            return true;
-        }
-    }*/
-
 
     @Override
     public boolean isOccupied(Vector2d position) {  //narazie uznaję, że i zwierze i trawka mogą zając pole, jesli bedzie trzeba to to zmienie
-        for (Grass tuft : grass) {
-            Vector2d pos = tuft.getPosition();
-            if (pos.x == position.x && pos.y == position.y) {
-                return true;
-            }
-        }
-        /*for (Animal avatar : animals) {
-            Vector2d pos = avatar.getPosition();
-            if (pos.x == position.x && pos.y == position.y) {
-                return true;
-            }
-        }*/
-
-        if (super.isOccupied(position)) return true;
+        if (super.isOccupied(position)) return true; //wykorzystuje objectAt i metode isOccupied z AbstractWorldMap, ktora też korzysta z objectAt
+                                                        //-> zmiana objectAt powinna tutaj zadziałać
+        Object something = objectAt(position);
+        if (something instanceof Grass) return true;
 
         return false;
     }
 
     @Override
-    public Object objectAt(Vector2d position) {
-        /*for (Animal creature : animals) {
-            Vector2d pos = creature.getPosition();
-            if (pos.equals(position)) return creature;
-        }*/
+    public Object objectAt(Vector2d position) {  //ponieważ isOccupied bazuje na objectAt to po przejsciu na HashMape trzeba bedzie zmienić implementację tutaj
+
         if (super.objectAt(position) instanceof Animal) return super.objectAt(position);
 
-        for (Grass tuft : grass) {
+        return grass.get(position);
+        /*for (Grass tuft : grass) {
             Vector2d pos = tuft.getPosition();
             if (pos.equals(position)) return tuft;
-        }
+        }*/
 
-
-        return null;
+        //return null;
     }
 }
