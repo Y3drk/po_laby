@@ -17,16 +17,20 @@ public class GrassFieldTest {
 
         //test place - sprawdzimy czy pierwsze 3 zwierzęta zostały umieszczone, a 4 nie
         ArrayList<Object> resPlace = new ArrayList<Object>();
-        for (Vector2d posi: positions ) {
-            Animal ani = new Animal(map,posi);
-            boolean x = map.place(ani);
-            resPlace.add(x);
+        try {
+            for (Vector2d posi : positions) {
+                Animal ani = new Animal(map, posi);
+                boolean x = map.place(ani);
+                resPlace.add(x);
+            }
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex);
         }
 
         assertEquals(resPlace.get(0),true);
         assertEquals(resPlace.get(1),true);
         assertEquals(resPlace.get(2),true);
-        assertEquals(resPlace.get(3),false);
+        //assertEquals(resPlace.get(3), "Pole: " + new Vector2d(2,2) + " jest już zajęte"); już niepotrzebne bo bład łapiemy wczesniej
 
         //test isOccupied - sprawdzimy czy pola 3 zwierząt są zajęte
         for (int i = 0; i < positions.length-1; i++) {

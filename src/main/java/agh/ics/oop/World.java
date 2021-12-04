@@ -1,6 +1,9 @@
 package agh.ics.oop;
 
 
+import agh.ics.oop.gui.App;
+import javafx.application.Application;
+
 import java.util.ArrayList;
 
 
@@ -89,6 +92,7 @@ public class World {
 
         //lab6 - test działania po zmianach na HashMap
         // w zasadzie oczekujemy, że wydarzy się to samo
+        /*
         ArrayList<MoveDirection> directions = OptionParser.parser(args);
         System.out.println(directions);
         IWorldMap map = new GrassField(10);
@@ -97,9 +101,30 @@ public class World {
         engine.run();
 
         System.out.print(map);
+        */
 
+
+        //laby7
+        /*try {
+        ArrayList<MoveDirection> directions = OptionParser.parser(args);
+        System.out.println(directions);
+        IWorldMap map = new GrassField(10);
+        Vector2d[] positions = { new Vector2d(2,2),new Vector2d(3,4)};
+        IEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
+
+
+        System.out.print(map);
+*/
+        Application.launch(App.class, args);
+/*
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex);
+            System.exit(0);
+
+        }
         System.out.println("system zakończył działanie");
-
+*/
     }
 
     //laby1
@@ -135,4 +160,5 @@ public class World {
         }
         System.out.println("STOP");
     }
+
 }

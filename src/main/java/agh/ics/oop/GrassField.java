@@ -1,92 +1,72 @@
 package agh.ics.oop;
 
+import javafx.util.Pair;
+
 import java.util.*;
 
 import static java.lang.Math.sqrt;
 
 public class GrassField extends AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     private final int n; //ilosc kępek trawy
-    //private ArrayList<Animal> animals = new ArrayList<>(); //do zmiany na hash Mapę w lab6
-    //private ArrayList<Grass> grass = new ArrayList<>(); //do zmiany na hash Mapę w lab6
-
     private Map<Vector2d, Animal> animals = new LinkedHashMap<>();
     private Map<Vector2d, Grass> grass = new LinkedHashMap<>();
+    private MapBoundary boundaries = new MapBoundary();
 
     public GrassField(int amountOfGrass) {
         this.n = amountOfGrass;
         placeTuftsOfGrass();
     }
 
-    public void placeTuftsOfGrass() { //trzeba będzie zmienic .add na .put przez syntaktyke HashMapy
+    public void placeTuftsOfGrass() {
         Random generator = new Random();
         int i = 0;
         while (i < this.n) {
             Vector2d pos = new Vector2d(generator.nextInt((int) sqrt(10 * n)), generator.nextInt((int) sqrt(10 * n)));
             if (!isOccupied(pos)) {
-                grass.put(pos,new Grass(pos));  //grass.add(new Grass(pos));
+                grass.put(pos,new Grass(pos));
+                boundaries.axisX.add(new Pair<>(pos,new Grass(pos)));
+                boundaries.axisY.add(new Pair<>(pos,new Grass(pos)));
                 i++;
             }
         }
     }
 
+    public boolean place(Animal animal) {
+        if(super.place(animal)) {
+            boundaries.axisX.add(new Pair<>(animal.getPosition(),animal));
+            boundaries.axisY.add(new Pair<>(animal.getPosition(),animal));
+            return true;
+        }
+        return false;
+    }
+
     public String toString(){
-        animals.putAll(super.animals);  //zastanowić się jak to uaktualnić do HashMapy -> istnieje metoda .putAll()
+        animals.putAll(super.animals);
 
         return super.toString();
     }
 
-    public Vector2d[] getCorners(){ //psuje sie przez forEach ...???
+    public Vector2d[] getCorners(){
         Vector2d topRight = new Vector2d (0,0);
         Vector2d bottomLeft = new Vector2d (0,0);
 
-        Set<Map.Entry<Vector2d, Animal>> entrySetAnimals = animals.entrySet();
-        Set<Map.Entry<Vector2d, Grass>> entrySetGrass = grass.entrySet();
+        Vector2d smallestY = boundaries.axisY.first().getKey();
+        Vector2d biggestY = boundaries.axisY.last().getKey();
+        Vector2d smallestX = boundaries.axisX.first().getKey();
+        Vector2d biggestX = boundaries.axisX.last().getKey();
 
-        Iterator<Map.Entry<Vector2d, Animal>> itAnimals = entrySetAnimals.iterator();
-        Iterator<Map.Entry<Vector2d, Grass>> itGrass = entrySetGrass.iterator();
+        topRight = topRight.upperRight(biggestY);
+        topRight = topRight.upperRight(biggestX);
 
-        while (itAnimals.hasNext()){
-            var pos = itAnimals.next().getKey();
-            topRight = topRight.upperRight(pos);
-
-            bottomLeft = bottomLeft.lowerLeft(pos);
-        }
-
-        while(itGrass.hasNext()){
-            var pos = itGrass.next().getKey();
-            topRight = topRight.upperRight(pos);
-
-            bottomLeft = bottomLeft.lowerLeft(pos);
-        }
-
-        /*for (Animal lifeform: animals){
-            Vector2d pos = lifeform.getPosition();
-
-            if (pos.x > topRight.x){
-                topRight= new Vector2d(pos.x, topRight.y);
-            }
-            if (pos.y > topRight.y){
-                topRight= new Vector2d(topRight.x, pos.y);
-            }
-            if (pos.x < bottomLeft.x){
-                bottomLeft = new Vector2d(pos.x, bottomLeft.y);
-            }
-            if (pos.y < bottomLeft.y){
-                bottomLeft = new Vector2d(bottomLeft.x, pos.y);
-            }
-        }
-
-        for (Grass tuft: grass){
-            Vector2d pos = tuft.getPosition();
-            if (pos.x > topRight.x){
-                topRight= new Vector2d(pos.x, topRight.y);
-            }
-            if (pos.y > topRight.y){
-                topRight= new Vector2d(topRight.x, pos.y);
-            }
-        }*/
+        bottomLeft = bottomLeft.lowerLeft(smallestY);
+        bottomLeft = bottomLeft.lowerLeft(smallestX);
 
         return new Vector2d[]{bottomLeft, topRight};
+    }
+
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
+        super.positionChanged(oldPosition, newPosition);
+        boundaries.positionChanged(oldPosition, newPosition);
     }
 
     @Override
@@ -107,16 +87,9 @@ public class GrassField extends AbstractWorldMap implements IWorldMap, IPosition
     }
 
     @Override
-    public Object objectAt(Vector2d position) {  //ponieważ isOccupied bazuje na objectAt to po przejsciu na HashMape trzeba bedzie zmienić implementację tutaj
-
+    public Object objectAt(Vector2d position) {
         if (super.objectAt(position) instanceof Animal) return super.objectAt(position);
 
         return grass.get(position);
-        /*for (Grass tuft : grass) {
-            Vector2d pos = tuft.getPosition();
-            if (pos.equals(position)) return tuft;
-        }*/
-
-        //return null;
     }
 }

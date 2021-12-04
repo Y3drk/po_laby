@@ -4,13 +4,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
-    //public ArrayList<Animal> animals; //konieczna zmiana na HashMapę
 
-    public Map<Vector2d, Animal> animals;
+    protected Map<Vector2d, Animal> animals;
 
     public AbstractWorldMap() {
         this.animals = new LinkedHashMap<>();
-    } //this.animals = new ArrayList<>()
+    }
 
 
     public abstract Vector2d[] getCorners();
@@ -21,41 +20,31 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         return drawing.draw(corners[0], corners[1]);
     }
 
-    public boolean place(Animal animal) { //trzeba zmienić .add na .put ze względu na syntaktykę HashMapy
+    public boolean place(Animal animal) {
         Vector2d pos = animal.getPosition();
         Object something = objectAt(pos);
         if (something instanceof Animal) {
-            return false;
+            throw new IllegalArgumentException ("Field: " + pos + " is already occupied!");
         } else {
             animal.addObserver(this);
-            animals.put(pos, animal); //animals.add(animal);
+            animals.put(pos, animal);
             return true;
         }
     }
 
-    public boolean isOccupied(Vector2d position) {  //wykorzystuje objectAt wiec po zmianie na hashMapę zmiana objectAt powinno wystarczy
+    public boolean isOccupied(Vector2d position) {
         return animals.containsKey(position);
     }
 
-    public Object objectAt(Vector2d position) { //for wynika z używania ArrayList - po zamianie na HashMapę trzeba bedzie to zmienić, trzeba uzywać .get();
+    public Object objectAt(Vector2d position) {
         return animals.get(position);
     }
 
 
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition){ //byc może tu są błędy, okaże się pózniej
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
         Animal animal = animals.get(oldPosition);
-        //możliwe, że trzeba też zmienic pozycje wewnątrz zwierzaka - rather not
-        animals.remove(oldPosition);
 
+        animals.remove(oldPosition);
         animals.put(newPosition, animal);
     }
 }
-
-        /*for (Animal creature: animals)
-        {
-            Vector2d pos = creature.getPosition();
-            if (pos.equals(position)) return creature;
-        }*
-        return null;
-    }
-}*/
