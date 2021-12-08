@@ -41,7 +41,7 @@ public class App extends Application {
 
         } catch (IllegalArgumentException ex) {
             System.out.println(ex);
-            System.exit(0);
+            System.exit(1);
 
         }
     }
@@ -50,7 +50,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         // !!!!!! TO DO
-        board.getColumnConstraints().add(new ColumnConstraints(20));
+        board.getColumnConstraints().add(new ColumnConstraints(50));
         board.add( new Label ("y/x"), 0, 0);
 
         //System.out.println(bottomLeft);
@@ -58,7 +58,7 @@ public class App extends Application {
 
         for (int i = 1; i <= upperRight.x - bottomLeft.x + 1; i++){
             Label axisLabel = new Label(Integer.toString(i + bottomLeft.x - 1));
-            board.getColumnConstraints().add(new ColumnConstraints(20));
+            board.getColumnConstraints().add(new ColumnConstraints(50));
             board.add(axisLabel, i, 0);
             GridPane.setHalignment(axisLabel, HPos.CENTER);
 
@@ -67,16 +67,23 @@ public class App extends Application {
         for (int j = 1; j <= upperRight.y - bottomLeft.y + 1; j++){
             Label axisLabel = new Label(Integer.toString(upperRight.y - j + 1));
             board.add(axisLabel, 0, j);
-            board.getRowConstraints().add(new RowConstraints(20));
+            board.getRowConstraints().add(new RowConstraints(50));
             GridPane.setHalignment(axisLabel, HPos.CENTER);
         }
         for (int i = 1; i <= upperRight.x - bottomLeft.x + 1; i++) { //bład przeliczania
             for (int j = 1; j <= upperRight.y - bottomLeft.y + 1; j++){
                 Vector2d testedPos = new Vector2d(i + bottomLeft.x - 1,upperRight.y - j + 1);
                 if (mapInside.isOccupied(testedPos)) {
-                    Label wow = new Label (mapInside.objectAt(testedPos).toString());
+                    //laby 7a
+                    /*Label wow = new Label (mapInside.objectAt(testedPos).toString());
                     board.add(wow,i, j);
-                    GridPane.setHalignment(wow, HPos.CENTER);
+                    GridPane.setHalignment(wow, HPos.CENTER);*/
+                    //System.out.println(mapInside.objectAt(testedPos) instanceof Animal);
+
+                    //laby8
+                    GuiElementBox elem = new GuiElementBox((IMapElement) mapInside.objectAt(testedPos));
+                    board.add(elem.verticalBox,i, j);
+                    GridPane.setHalignment(elem.verticalBox, HPos.CENTER);
 
                 } else board.add(new Label (" "),i, j);
             }
@@ -86,4 +93,5 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 }

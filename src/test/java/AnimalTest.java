@@ -93,37 +93,42 @@ public class AnimalTest {
 }
 @Test
     public void l4AnimalsTest(){
-
+    //część wykomentowana bo zmieniamy strukturę danych na hashMape
     //inicjalizacja próby
-    ArrayList<MoveDirection> directions = OptionParser.parser(new String[]{"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "b", "f", "f", "b", "f", "l", "f", "f", "r"});
-    //OptionParser.parser() był już sprawdzany na poprzednich laboratoriach stąd wiemy, że działa poprawnie
-    IWorldMap map = new RectangularMap(8, 6);
-    Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4), new Vector2d(6,1), new Vector2d(2,2)};
-    IEngine engine = new SimulationEngine(directions, map, positions);
+    try {
+        ArrayList<MoveDirection> directions = OptionParser.parser(new String[]{"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "b", "f", "f", "b", "f", "l", "f", "f", "r"});
+        //OptionParser.parser() był już sprawdzany na poprzednich laboratoriach stąd wiemy, że działa poprawnie
+        IWorldMap map = new RectangularMap(8, 6);
+        Vector2d[] positions = {new Vector2d(2, 2), new Vector2d(3, 4), new Vector2d(6, 1), new Vector2d(2, 2)};
+        IEngine engine = new SimulationEngine(directions, map, positions);
 
-    //2 kolejne sprawdzenia dotycza konstruktora SimulationEngine
-    RectangularMap mapTest = (RectangularMap) map;
-    ArrayList<Animal> testObjects = mapTest.getAnimalList();
-    //sprawdzenie czy wszystkie zwierzęta zostały położone poprawnie (czy jedno które spadłoby na inne pozostało ideą :) )
-    assertEquals(testObjects.size(), 3);
+        //2 kolejne sprawdzenia dotycza konstruktora SimulationEngine
+        RectangularMap mapTest = (RectangularMap) map;
+        ArrayList<Animal> testObjects = (ArrayList<Animal>) mapTest.getAnimalList();
+        //sprawdzenie czy wszystkie zwierzęta zostały położone poprawnie (czy jedno które spadłoby na inne pozostało ideą :) )
+        assertEquals(testObjects.size(), 3);
 
-    // spr. czy wszystkie zwierzęta po położeniu na mapie mają orientację NORTH
-    for (int i=0; i < testObjects.size(); i++) {
-        assertEquals(testObjects.get(i).getOrientation(), MapDirection.NORTH);
+        // spr. czy wszystkie zwierzęta po położeniu na mapie mają orientację NORTH
+        for (int i = 0; i < testObjects.size(); i++) {
+            assertEquals(testObjects.get(i).getOrientation(), MapDirection.NORTH);
+        }
+
+        //Nastąpią teraz 2 testy metody run()
+        engine.run();
+        // pierwszy test polega na sprawdzeniu czy ostateczne pozycje zwierzat będa poprawne
+        // drugi test sprawdzi poprawność ich orientacji
+        //1
+        assertEquals(testObjects.get(0).getPosition(), new Vector2d(2, 5));
+        assertEquals(testObjects.get(1).getPosition(), new Vector2d(3, 4));
+        assertEquals(testObjects.get(2).getPosition(), new Vector2d(8, 1));
+
+        //2
+        assertEquals(testObjects.get(0).getOrientation(), MapDirection.NORTH);
+        assertEquals(testObjects.get(1).getOrientation(), MapDirection.EAST);
+        assertEquals(testObjects.get(2).getOrientation(), MapDirection.EAST);
     }
-
-    //Nastąpią teraz 2 testy metody run()
-    engine.run();
-    // pierwszy test polega na sprawdzeniu czy ostateczne pozycje zwierzat będa poprawne
-    // drugi test sprawdzi poprawność ich orientacji
-    //1
-    assertEquals(testObjects.get(0).getPosition(), new Vector2d(2,5));
-    assertEquals(testObjects.get(1).getPosition(), new Vector2d(3,4));
-    assertEquals(testObjects.get(2).getPosition(), new Vector2d(8,1));
-
-    //2
-    assertEquals(testObjects.get(0).getOrientation(), MapDirection.NORTH);
-    assertEquals(testObjects.get(1).getOrientation(), MapDirection.EAST);
-    assertEquals(testObjects.get(2).getOrientation(), MapDirection.EAST);
+    catch (IllegalArgumentException ex) {
+        System.out.println(ex);
+    }
 }
 }

@@ -16,7 +16,7 @@ public class MapBoundary implements IPositionChangeObserver{
         Pair<Vector2d, IMapElement> redundant = axisX.first();
 
         for (Pair <Vector2d, IMapElement> lifeform : axisX) {
-            if (lifeform.getKey().equals(oldPosition)){
+            if (lifeform.getKey().equals(oldPosition) && lifeform.getValue() instanceof Animal){
                 redundant = lifeform;
             }
         }

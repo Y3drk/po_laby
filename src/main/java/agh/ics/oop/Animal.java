@@ -24,6 +24,16 @@ public class Animal implements IMapElement{
         };
     }
 
+    @Override
+    public String imageAddress(){
+            return switch (orientation){
+                case NORTH -> "src/main/resources/up.png";
+                case EAST -> "src/main/resources/right.png";
+                case SOUTH -> "src/main/resources/down.png";
+                case WEST -> "src/main/resources/left.png";
+            };
+    }
+
     public boolean isAt(Vector2d position){
         return this.position.x == position.x && this.position.y == position.y;
     }
@@ -73,6 +83,4 @@ public class Animal implements IMapElement{
             obs.positionChanged(oldPosition, newPosition);
         }
     }
-    //(oldPosition, newPosition)
-    //Vector2d oldPosition, Vector2d newPosition
 }

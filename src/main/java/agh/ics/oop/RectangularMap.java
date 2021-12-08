@@ -9,12 +9,11 @@ public class RectangularMap extends AbstractWorldMap implements IWorldMap, IPosi
     public int height;
     public Map<Vector2d, Animal> animals = new LinkedHashMap<>();
 
-    //public ArrayList<Animal> animals = new ArrayList<>(); //do zmiany na hash Mapę w lab6
 
 
-    public RectangularMap(int w, int h){
+    public RectangularMap(int w, int h) throws IllegalArgumentException{
         if (w < 0 || h < 0){
-            throw new IllegalArgumentException("Sizes must be > 0" + w + h); //zamiast tego można zignorować
+            throw new IllegalArgumentException("Sizes must be > 0 not: " + w + h); //zamiast tego można zignorować
         }
         else {
             this.height = h;
